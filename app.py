@@ -55,10 +55,13 @@ def edit_todo(id):
 # API to update a todo's completion status
 @app.route("/api/todos/<id>", methods=["PUT"])
 def update_todo(id):
+    TodoStatus = request.json["completed"]
+    updatedAt = request.json["updatedAt"]
+    print('-----------', request.json)
     todo = todos.find_one({"_id": ObjectId(id)})
     if todo:
         todos.update_one(
-            {"_id": ObjectId(id)}, {"$set": {"completed": not todo["completed"]}}
+            {"_id": ObjectId(id)}, {"$set": {"completed": TodoStatus, "updated_at": updatedAt}}
         )
         return jsonify({"message": "Todo updated successfully!"})
     return jsonify({"error": "Todo not found"}), 404
