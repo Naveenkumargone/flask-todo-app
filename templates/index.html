@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Application</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Todo Application</h1>
+        <form id="addTodoForm" class="form-inline mb-4">
+            <input type="text" id="taskInput" class="form-control mr-2" placeholder="Enter new task">
+            <button type="submit" class="btn btn-primary" id="addTodo">Add Todo</button>
+            <button type="submit" class="btn btn-warning" id="updateTodo">Update</button>
+            <button type="reset" class="btn btn-secondary mx-1" id="resetBtn">Cancel</button>
+        </form>
+
+        <ul id="todoList" class="list-group"></ul>
+    </div>
+</body>
+<script src="../static/index.js"></script>
+
+</html>
