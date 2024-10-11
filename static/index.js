@@ -19,7 +19,7 @@ function fetchTodos() {
                 data.forEach(todo => {
                     todoList.innerHTML += `
                         <li class="list-group-item d-flex justify-content-between align-items-center" key=${todo._id.$oid}>
-                            <div>
+                            <div class="w-50 pe-5">
                                 ${updateId == todo._id.$oid ? `<input 
                                         type="text" 
                                         id="changeTask"
