@@ -3,11 +3,14 @@ window.onload = function () {
     fetchTodos();
 };
 let updateId = ''
-let options = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
-document.getElementById('resetBtn').style.display = 'none'
-document.getElementById('updateTodo').style.display = 'none'
 
-// Fetch todos from backend
+let options = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
+
+// initially reset and update buttons are hidden
+document.getElementById('updateTodo').style.display = 'none'
+document.getElementById('resetBtn').style.display = 'none'
+
+// Fetch All todos from backend
 function fetchTodos() {
     fetch('/api/todos')
         .then(response => response.json())
@@ -33,32 +36,38 @@ function fetchTodos() {
                                     <span class="text-sm mx-5">Updated At: ${todo.updated_at}</span>
                                 </div>
                             </div>
-                            <div>
-                               Status : ${todo.completed == "Completed" ? `<span class="text-sm btn-success p-1 rounded-lg">Completed</span>` : `<span class="text-sm rounded-lg p-1 btn-warning">In-Progress</span>`}
+                            <div class="d-flex justify-content-between w-50">
+                                <div class="mx-2">
+                                    Status : ${todo.completed == "Completed" ? `<span class="text-sm btn-success p-1 rounded-lg">Completed</span>`
+                                        : (todo.completed == "Delayed" ? `<span class="text-sm rounded-lg p-1 btn-danger">Delayed</span>` : 
+                                        `<span class="text-sm rounded-lg p-1 btn-warning">In-Progress</span>`)}
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    ${todo.completed !== 'Completed' ?
+                                    `<select class="border border-dark-subtle rounded rounded-4 mx-5" value=${todo.completed} onChange="toggleStatus('${todo._id.$oid}', value)">
+                                            <option value="In-Progress" ${todo.completed === 'In-Progress' ? 'selected' : ''}>In-Progress</option>
+                                            <option value="Completed" ${todo.completed === 'Completed' ? 'selected' : ''}>Mark as Done</option>
+                                            <option value="Delayed" ${todo.completed === 'Delayed' ? 'selected' : ''}>Delayed</option>
+                                        </select>
+                                        <div class="flex justify-content-start my-2 ms-4" >
+                                        <button class="btn btn-primary btn-sm ms-4" onclick="editTodo('${todo.task}', '${todo._id.$oid}')">Edit</button>` : ''
+                                    }
+                                        <button class="btn btn-danger btn-sm me-4" onclick="deleteTodo('${todo._id.$oid}')">Delete</button>
+                                        </div>
+                                </div>
                             </div>
-                            <div>
-                                ${todo.completed !== 'Completed' ?
-                            `<button class="btn btn-success btn-sm" onclick="toggleComplete('${todo._id.$oid}', 'Completed')">Mark as Done</button>
-                                    <button class="btn btn-warning btn-sm" onclick="toggleComplete('${todo._id.$oid}', 'In-Progress')">In-Progress</button>
-                                    <button class="btn btn-danger btn-sm " onclick="toggleComplete('${todo._id.$oid}', 'Delayed')">Delayed</button>
-                                    <div class="flex justify-content-start my-2" >
-                                        <button class="btn btn-primary btn-sm ms-3" onclick="editTodo('${todo.task}', '${todo._id.$oid}')">Edit</button>` : ''}
-                                        <button class="btn btn-danger btn-sm" onclick="deleteTodo('${todo._id.$oid}')">Delete</button>
-                                    </div>
-                            </div>
-                        </li>
+                        </li >
                     `;
                 });
             }
         });
 }
 
-// Add a new todo
+// Add a new todo on Form Submit or Todo Edit
 document.getElementById('addTodoForm').addEventListener('submit', function (event) {
     event.preventDefault();
     const taskInput = document.getElementById('taskInput').value;
     if (updateId == '') {
-        const options = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
         fetch('/api/todos', {
             method: 'POST',
             headers: {
@@ -102,29 +111,7 @@ document.getElementById('addTodoForm').addEventListener('submit', function (even
 });
 
 
-function updateTask(todoId, newTask) {
-    // Make a PUT request to update the task
-    fetch(`/api/edittodo/${todoId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ task: newTask }) // Send the updated task title
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Task updated successfully:', data);
-        })
-        .catch((error) => {
-            console.error('Error updating task:', error);
-        });
-}
-
+// Reusable function to clear values
 function cleanForm() {
     document.getElementById("updateTodo").style.display = 'none'
     document.getElementById("resetBtn").style.display = 'none'
@@ -136,7 +123,7 @@ document.getElementById("resetBtn").addEventListener("click", () => {
     cleanForm()
 });
 
-// Toggle todo completion status
+// Edit Todos Tasks value
 function editTodo(task, updid) {
     updateId = ''
     const inputField = document.getElementById("taskInput");
@@ -151,18 +138,26 @@ function editTodo(task, updid) {
     addTodo.style.display = 'none'
 }
 
-// Toggle todo completion status
-function toggleComplete(id, status) {
-    console.log(id, status);
-    fetch(`/api/todos/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify({ completed: status, updatedAt: new Date().toLocaleString('en-US', options).replace(',', '') })
-    })
-        .then(response => response.json())
-        .then(data => fetchTodos());
+// Toggle todo change status by its id and status
+function toggleStatus(id, status) {
+    try {
+        console.log(id, status);
+        fetch(`/api/todos/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ completed: status, updatedAt: new Date().toLocaleString('en-US', options).replace(',', '') })
+        })
+            .then(response => response.json())
+            .then(data => fetchTodos());
+    } catch (error) {
+        console.log(error);
+    }
 }
 
-// Delete a todo
+
+// Delete a todo by providing id
 function deleteTodo(id) {
     fetch(`/api/todos/${id}`, { method: 'DELETE' })
         .then(response => response.json())

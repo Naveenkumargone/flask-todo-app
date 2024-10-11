@@ -59,9 +59,11 @@ def update_todo(id):
     updatedAt = request.json["updatedAt"]
     print('-----------', request.json)
     todo = todos.find_one({"_id": ObjectId(id)})
+    print(todo)
     if todo:
         todos.update_one(
-            {"_id": ObjectId(id)}, {"$set": {"completed": TodoStatus, "updated_at": updatedAt}}
+            {"_id": ObjectId(id)}, 
+            {"$set": {"completed": TodoStatus, "updated_at": updatedAt}}
         )
         return jsonify({"message": "Todo updated successfully!"})
     return jsonify({"error": "Todo not found"}), 404
