@@ -1,7 +1,11 @@
 from flask import Flask, render_template, jsonify, request
 from pymongo import MongoClient
+
+# bson is Binary Json for efficient data handling for mongodb
 from bson import ObjectId, json_util
 
+
+# creating new instance of flask app
 app = Flask(__name__)
 
 # Connecting to MongoDB
