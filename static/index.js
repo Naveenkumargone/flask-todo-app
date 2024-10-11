@@ -6,10 +6,6 @@ let updateId = ''
 
 let options = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
 
-// initially reset and update buttons are hidden
-document.getElementById('updateTodo').style.display = 'none'
-document.getElementById('resetBtn').style.display = 'none'
-
 // Fetch All todos from backend
 function fetchTodos() {
     fetch('/api/todos')
@@ -38,9 +34,9 @@ function fetchTodos() {
                             </div>
                             <div class="d-flex justify-content-between w-50">
                                 <div class="mx-2">
-                                    Status : ${todo.completed == "Completed" ? `<span class="text-sm btn-success p-1 rounded-lg">Completed</span>`
-                                        : (todo.completed == "Delayed" ? `<span class="text-sm rounded-lg p-1 btn-danger">Delayed</span>` : 
-                                        `<span class="text-sm rounded-lg p-1 btn-warning">In-Progress</span>`)}
+                                    Status : ${todo.completed == "Completed" ? `<span class="text-sm btn-success p-1 btn rounded-lg cursor-text">Completed</span>`
+                                        : (todo.completed == "Delayed" ? `<span class="text-sm rounded-lg p-1 btn btn-danger cursor-text">Delayed</span>` : 
+                                        `<span class="text-sm rounded-lg p-1 btn btn-warning cursor-text">In-Progress</span>`)}
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     ${todo.completed !== 'Completed' ?
@@ -113,9 +109,10 @@ document.getElementById('addTodoForm').addEventListener('submit', function (even
 
 // Reusable function to clear values
 function cleanForm() {
-    document.getElementById("updateTodo").style.display = 'none'
-    document.getElementById("resetBtn").style.display = 'none'
-    document.getElementById("addTodo").style.display = 'block'
+    const updateControls = document.getElementById("updateControls");
+    updateControls.className = 'col-8 d-none';
+    const addTodo = document.getElementById("addTodo")
+    addTodo.className = 'col-8'
     updateId = ''
 }
 
@@ -130,12 +127,12 @@ function editTodo(task, updid) {
     if (inputField) {
         inputField.value = task;
     }
-    document.getElementById("updateTodo").style.display = 'block'
-    document.getElementById("resetBtn").style.display = 'block'
+    const addTodo = document.getElementById("addTodo")
+    addTodo.className = 'col-8 d-none'
+    const updateTodo = document.getElementById("updateControls")
+    updateTodo.className = 'col-8'
 
     updateId = updid
-    const addTodo = document.getElementById("addTodo")
-    addTodo.style.display = 'none'
 }
 
 // Toggle todo change status by its id and status
