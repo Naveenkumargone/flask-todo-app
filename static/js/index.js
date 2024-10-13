@@ -64,44 +64,52 @@ document.getElementById('addTodoForm').addEventListener('submit', function (even
     event.preventDefault();
     const taskInput = document.getElementById('taskInput').value;
     if (updateId == '') {
-        fetch('/api/todos', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(
-                {
-                    task: taskInput,
-                    created_at: new Date().toLocaleString('en-US', options).replace(',', ''),
-                    completed: "In-Progress",
-                    updated_at: new Date().toLocaleString('en-US', options).replace(',', '')
-                }),
-        })
+        if (taskInput.length >= 5 && taskInput.length <= 100) {
+            fetch('/api/todos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                    {
+                        task: taskInput,
+                        created_at: new Date().toLocaleString('en-US', options).replace(',', ''),
+                        completed: "In-Progress",
+                        updated_at: new Date().toLocaleString('en-US', options).replace(',', '')
+                    }),
+            })
             .then(response => response.json())
             .then(data => {
                 updateId = ''
                 document.getElementById('taskInput').value = '';
                 fetchTodos();
             });
+        }else{
+            alert('Task must be between 5 and 100 characters.');
+        }
     }
-    if (updateId != '') {
-        fetch(`/api/editTodo/${updateId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(
-                {
-                    task: taskInput,
-                    updated_at: new Date().toLocaleString('en-US', options).replace(',', '')
-                }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                updateId = ''
-                document.getElementById('taskInput').value = '';
-                fetchTodos();
-            });
+    else {
+        if (taskInput.length >= 5 && taskInput.length <= 100) {
+            fetch(`/api/editTodo/${updateId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(
+                    {
+                        task: taskInput,
+                        updated_at: new Date().toLocaleString('en-US', options).replace(',', '')
+                    }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    updateId = ''
+                    document.getElementById('taskInput').value = '';
+                    fetchTodos();
+                });
+        }else{
+            alert('Task must be between 5 and 100 characters.');
+        }
     }
     cleanForm();
 });
@@ -131,14 +139,12 @@ function editTodo(task, updid) {
     addTodo.className = 'col-8 d-none'
     const updateTodo = document.getElementById("updateControls")
     updateTodo.className = 'col-8'
-
     updateId = updid
 }
 
 // Toggle todo change status by its id and status
 function toggleStatus(id, status) {
     try {
-        console.log(id, status);
         fetch(`/api/todos/${id}`, {
             method: 'PUT',
             headers: {
@@ -156,7 +162,11 @@ function toggleStatus(id, status) {
 
 // Delete a todo by providing id
 function deleteTodo(id) {
-    fetch(`/api/todos/${id}`, { method: 'DELETE' })
-        .then(response => response.json())
-        .then(data => fetchTodos());
+    try {
+        fetch(`/api/todos/${id}`, { method: 'DELETE' })
+            .then(response => response.json())
+            .then(data => fetchTodos());
+    } catch (error) {
+        console.log(error);
+    }
 }
