@@ -9,7 +9,7 @@ let options = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit'
 // Fetch All todos from backend
 function fetchTodos() {
     fetch('/api/todos')
-        .then(response => response.json())
+        .then(response => response.json())  // After the POST request is made, the server returns a response and we parses the response body as JSON
         .then(data => {
             const todoList = document.getElementById('todoList');
             todoList.innerHTML = '';
@@ -67,13 +67,13 @@ document.getElementById('addTodoForm').addEventListener('submit', function (even
         if (taskInput.length >= 5 && taskInput.length <= 100) {
             fetch('/api/todos', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
+                headers: {                                     
+                    'Content-Type': 'application/json',         // this ensures that the server can parse the data correctly
                 },
-                body: JSON.stringify(
+                body: JSON.stringify(                   // server need the request body should be a string for POST Request 
                     {
                         task: taskInput,
-                        created_at: new Date().toLocaleString('en-US', options).replace(',', ''),
+                        created_at: new Date().toLocaleString('en-US', options).replace(',', ''),      // this function formats the date and time based on locale and converts time into 12 hrs format
                         completed: "In-Progress",
                         updated_at: new Date().toLocaleString('en-US', options).replace(',', '')
                     }),

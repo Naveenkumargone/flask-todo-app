@@ -40,7 +40,7 @@ def add_todo():
         if task:
             new_todo = task
             todos.insert_one(new_todo)                # insert_one method inserts a single object into the database.
-            return jsonify({"message": "Todo added successfully!"}), 201
+            return jsonify({"message": "Todo added successfully!"}), 201           # jsonify converts Python dictionaries into JSON.
     except Exception:
         return jsonify({"error": "Task is required"}), 400
 
