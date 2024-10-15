@@ -34,16 +34,16 @@ function fetchTodos() {
                             </div>
                             <div class="d-flex justify-content-between w-50">
                                 <div class="mx-2">
-                                    Status : ${todo.completed == "Completed" ? `<span class="text-sm btn-success p-1 btn rounded-lg cursor-text">Completed</span>`
-                                        : (todo.completed == "Delayed" ? `<span class="text-sm rounded-lg p-1 btn btn-danger cursor-text">Delayed</span>` : 
-                                        `<span class="text-sm rounded-lg p-1 btn btn-warning cursor-text">In-Progress</span>`)}
+                                    Status : ${todo.completed == "Completed" ? `<span class="text-sm btn-success p-1 btn rounded-lg cursor-text">Completed </span>`
+                                        : (todo.completed == "Delayed" ? `<span class="text-sm rounded-lg p-1 btn btn-danger cursor-text">Delayed </span>` : 
+                                        `<span class="text-sm rounded-lg p-1 btn btn-warning cursor-text">In-Progress </span>`)}
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     ${todo.completed !== 'Completed' ?
                                     `<select class="border border-dark-subtle rounded rounded-4 mx-5" value=${todo.completed} onChange="toggleStatus('${todo._id.$oid}', value)">
-                                            <option value="In-Progress" ${todo.completed === 'In-Progress' ? 'selected' : ''}>In-Progress</option>
-                                            <option value="Completed" ${todo.completed === 'Completed' ? 'selected' : ''}>Mark as Done</option>
-                                            <option value="Delayed" ${todo.completed === 'Delayed' ? 'selected' : ''}>Delayed</option>
+                                            <option value="In-Progress" ${todo.completed === 'In-Progress' ? 'selected' : ''}>In-Progress 🙄</option>
+                                            <option value="Completed" ${todo.completed === 'Completed' ? 'selected' : ''}>Mark as Done 😊</option>
+                                            <option value="Delayed" ${todo.completed === 'Delayed' ? 'selected' : ''}>Delayed 😒</option>
                                         </select>
                                         <div class="flex justify-content-start my-2 ms-4" >
                                         <button class="btn btn-primary btn-sm ms-4" onclick="editTodo('${todo.task}', '${todo._id.$oid}')">Edit</button>` : ''
